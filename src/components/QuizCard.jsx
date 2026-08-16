@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check, X, ArrowRight } from 'lucide-react';
 import ProgressBar from './ProgressBar';
 
-export default function QuizCard({ question, currentIndex, total, onNext }) {
+export default function QuizCard({ question, currentIndex, total, onAnswerSelected, onNextQuestion }) {
   const [selectedOption, setSelectedOption] = useState(null);
+
+  // Reset local state when question changes
+  useEffect(() => {
+    setSelectedOption(null);
+  }, [question.id]);
 
   const handleOptionClick = (index) => {
     if (selectedOption !== null) return; // Prevent multiple selections
     setSelectedOption(index);
-  };
-
-  const handleNextClick = () => {
-    onNext(selectedOption, selectedOption === question.correctAnswer);
-    setSelectedOption(null);
+    onAnswerSelected(index === question.correctAnswer);
   };
 
   return (
@@ -47,12 +48,12 @@ export default function QuizCard({ question, currentIndex, total, onNext }) {
               onClick={() => handleOptionClick(index)}
               disabled={hasAnswered}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', textAlign: 'left' }}>
                 <span style={{ fontWeight: 'bold' }}>{prefix}.</span>
                 <span>{option}</span>
               </div>
-              {hasAnswered && isCorrect && <Check size={24} />}
-              {hasAnswered && isSelected && !isCorrect && <X size={24} />}
+              {hasAnswered && isCorrect && <Check size={24} style={{ flexShrink: 0 }} />}
+              {hasAnswered && isSelected && !isCorrect && <X size={24} style={{ flexShrink: 0 }} />}
             </button>
           );
         })}
@@ -61,9 +62,9 @@ export default function QuizCard({ question, currentIndex, total, onNext }) {
       {selectedOption !== null && (
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: selectedOption === question.correctAnswer ? 'var(--correct-text)' : 'var(--incorrect-text)' }}>
-            {selectedOption === question.correctAnswer ? 'Chính xác! 🎉' : 'Chưa chính xác!'}
+            {selectedOption === question.correctAnswer ? 'Chính xác! 🎉 (Hãy chọn đội để cộng điểm bên phải)' : 'Chưa chính xác!'}
           </div>
-          <button className="btn" onClick={handleNextClick}>
+          <button className="btn" onClick={onNextQuestion}>
             CÂU TIẾP THEO <ArrowRight size={24} />
           </button>
         </div>

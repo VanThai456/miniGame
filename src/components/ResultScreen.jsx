@@ -1,34 +1,53 @@
-import React from 'react';
-import { RotateCcw, List } from 'lucide-react';
+import React from "react";
 
-export default function ResultScreen({ score, total, onRestart, onReview }) {
-  const percentage = Math.round((score / total) * 100);
+export default function ResultScreen({ scores }) {
+  // Determine winner(s)
+  let maxScore = -1;
+  let winners = [];
+
+  Object.entries(scores).forEach(([team, score]) => {
+    if (score > maxScore) {
+      maxScore = score;
+      winners = [team];
+    } else if (score === maxScore) {
+      winners.push(team);
+    }
+  });
 
   return (
-    <div className="card text-center" style={{ padding: '4rem 2rem' }}>
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--text-main)' }}>
-        HOÀN THÀNH!
-      </h1>
-      <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', marginBottom: '2rem' }}>
-        Bạn đã trả lời đúng {score}/{total} câu
+    <div className="card text-center" style={{ padding: "4rem 2rem" }}>
+      <div style={{ fontSize: "5rem", marginBottom: "1rem" }}>🏆</div>
+      <h1
+        style={{
+          fontSize: "3rem",
+          marginBottom: "1rem",
+          color: "var(--correct-border)",
+        }}
+      ></h1>
+      <p
+        style={{
+          fontSize: "1.5rem",
+          color: "var(--text-main)",
+          marginBottom: "2rem",
+        }}
+      >
+        Tiểu đội xuất sắc nhất là:
       </p>
-      
-      <div style={{
-        fontSize: '4rem', 
-        fontWeight: 'bold', 
-        color: percentage >= 50 ? 'var(--correct-border)' : 'var(--incorrect-border)',
-        marginBottom: '3rem'
-      }}>
-        {percentage}%
+
+      <div
+        style={{
+          fontSize: "4rem",
+          fontWeight: "bold",
+          color: "var(--accent-color)",
+          marginBottom: "1rem",
+          textShadow: "0 4px 10px rgba(0,0,0,0.1)",
+        }}
+      >
+        Tiểu đội {winners.join(" và Tiểu đội ")}
       </div>
 
-      <div className="flex-center gap-4" style={{ flexWrap: 'wrap' }}>
-        <button className="btn" onClick={onRestart}>
-          <RotateCcw size={20} /> LÀM LẠI
-        </button>
-        <button className="btn btn-secondary" onClick={onReview}>
-          <List size={20} /> XEM LẠI ĐÁP ÁN
-        </button>
+      <div style={{ fontSize: "1.5rem", color: "var(--text-muted)" }}>
+        Với {maxScore} điểm
       </div>
     </div>
   );

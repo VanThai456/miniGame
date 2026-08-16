@@ -1,120 +1,92 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import StartScreen from './components/StartScreen';
 import QuizCard from './components/QuizCard';
 import ResultScreen from './components/ResultScreen';
-import ReviewScreen from './components/ReviewScreen';
-import EditScreen from './components/EditScreen';
-import { questions as defaultQuestions } from './data/questions';
+import ScoreBoard from './components/ScoreBoard';
+import { questions } from './data/questions';
+
+const INITIAL_SCORES = {
+  '31': 0, '32': 0, '33': 0, '56': 0, '35': 0, '36': 0, '57': 0
+};
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('start'); // start, quiz, result, review, edit
+  const [currentScreen, setCurrentScreen] = useState('start'); // start, quiz, result
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [userAnswers, setUserAnswers] = useState([]);
-  const [appQuestions, setAppQuestions] = useState(defaultQuestions);
-
-  useEffect(() => {
-    // Load from localStorage on mount
-    const saved = localStorage.getItem('quizQuestions');
-    if (saved) {
-      try {
-        setAppQuestions(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to parse saved questions", e);
-      }
-    }
-  }, []);
+  const [scores, setScores] = useState(INITIAL_SCORES);
+  
+  // Track if the current question has been answered correctly and point is awardable
+  const [isAwardable, setIsAwardable] = useState(false);
+  const [pointAwarded, setPointAwarded] = useState(false);
 
   const handleStart = () => {
     setCurrentScreen('quiz');
     setCurrentQuestionIndex(0);
-    setScore(0);
-    setUserAnswers([]);
+    setScores(INITIAL_SCORES);
+    setIsAwardable(false);
+    setPointAwarded(false);
   };
 
-  const handleEdit = () => {
-    setCurrentScreen('edit');
-  };
-
-  const handleSaveQuestions = (newQuestions) => {
-    setAppQuestions(newQuestions);
-    localStorage.setItem('quizQuestions', JSON.stringify(newQuestions));
-  };
-
-  const handleRestoreDefaults = (defaults) => {
-    setAppQuestions(defaults);
-    localStorage.removeItem('quizQuestions');
-  };
-
-  const handleBackFromEdit = (force) => {
-    // If force is true, we just go back. Confirm logic is in EditScreen.
-    if (force) {
-      setCurrentScreen('start');
-    }
-  };
-
-  const handleNextQuestion = (selectedOption, isCorrect) => {
+  const handleAnswerSelected = (isCorrect) => {
     if (isCorrect) {
-      setScore(prev => prev + 1);
+      setIsAwardable(true);
+      setPointAwarded(false);
+    } else {
+      setIsAwardable(false);
     }
-    
-    setUserAnswers(prev => [...prev, selectedOption]);
+  };
 
-    if (currentQuestionIndex < appQuestions.length - 1) {
+  const handleAddPoint = (team) => {
+    if (isAwardable && !pointAwarded) {
+      setScores(prev => ({
+        ...prev,
+        [team]: prev[team] + 1
+      }));
+      setPointAwarded(true);
+      setIsAwardable(false); // Can only award once per question
+    }
+  };
+
+  const handleNextQuestion = () => {
+    setIsAwardable(false);
+    setPointAwarded(false);
+
+    if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
       setCurrentScreen('result');
     }
   };
 
-  const handleRestart = () => {
-    setCurrentScreen('start'); 
-    handleStart(); 
-  };
-
-  const handleReview = () => {
-    setCurrentScreen('review');
-  };
-
   return (
-    <>
-      {currentScreen === 'start' && <StartScreen onStart={handleStart} onEdit={handleEdit} />}
-      
-      {currentScreen === 'edit' && (
-        <EditScreen 
-          questions={appQuestions} 
-          onSave={handleSaveQuestions} 
-          onBack={handleBackFromEdit}
-          onRestore={handleRestoreDefaults}
-        />
-      )}
+    <div className={`app-container ${currentScreen !== 'start' ? 'with-sidebar' : ''}`}>
+      <div className="main-content">
+        {currentScreen === 'start' && <StartScreen onStart={handleStart} />}
+        
+        {currentScreen === 'quiz' && (
+          <QuizCard 
+            question={questions[currentQuestionIndex]} 
+            currentIndex={currentQuestionIndex} 
+            total={questions.length} 
+            onAnswerSelected={handleAnswerSelected}
+            onNextQuestion={handleNextQuestion} 
+          />
+        )}
+        
+        {currentScreen === 'result' && (
+          <ResultScreen scores={scores} />
+        )}
+      </div>
 
-      {currentScreen === 'quiz' && (
-        <QuizCard 
-          question={appQuestions[currentQuestionIndex]} 
-          currentIndex={currentQuestionIndex} 
-          total={appQuestions.length} 
-          onNext={handleNextQuestion} 
-        />
+      {currentScreen !== 'start' && (
+        <div className="sidebar">
+          <ScoreBoard 
+            scores={scores} 
+            onAddPoint={handleAddPoint}
+            isAwardable={isAwardable && !pointAwarded}
+          />
+        </div>
       )}
-      
-      {currentScreen === 'result' && (
-        <ResultScreen 
-          score={score} 
-          total={appQuestions.length} 
-          onRestart={handleRestart} 
-          onReview={handleReview} 
-        />
-      )}
-
-      {currentScreen === 'review' && (
-        <ReviewScreen 
-          questions={appQuestions}
-          userAnswers={userAnswers}
-          onRestart={handleRestart}
-        />
-      )}
-    </>
+    </div>
   );
 }
 

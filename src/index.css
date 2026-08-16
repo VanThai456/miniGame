@@ -1,28 +1,33 @@
 :root {
-  --primary-color: #2e3034;
-  --bg-start: #e0f7fa; /* Light mint */
-  --bg-end: #ffffff;
-  --correct-bg: #d4edda;
-  --correct-border: #28a745;
-  --correct-text: #155724;
-  --incorrect-bg: #f8d7da;
-  --incorrect-border: #dc3545;
-  --incorrect-text: #721c24;
+  --primary-color: #14532d; /* Deep green */
+  --bg-start: #f8fafc; 
+  --bg-end: #bbf7d0; /* vibrant mint green */
+  --correct-bg: #dcfce7;
+  --correct-border: #22c55e;
+  --correct-text: #166534;
+  --incorrect-bg: #fee2e2;
+  --incorrect-border: #ef4444;
+  --incorrect-text: #991b1b;
   --neutral-bg: #ffffff;
-  --neutral-border: #dee2e6;
-  --neutral-hover: #f1f3f5;
-  --text-main: #333333;
-  --text-muted: #6c757d;
-  --btn-bg: #4caf50;
-  --btn-hover: #45a049;
+  --neutral-border: #e2e8f0;
+  --neutral-hover: #f1f5f9;
+  --text-main: #1e293b; /* Dark slate */
+  --text-heading: #14532d; /* Match the dark green heading */
+  --text-muted: #475569;
+  --btn-bg: #16a34a; /* Emerald green */
+  --btn-hover: #15803d;
+  --accent-color: #16a34a; /* Accent for the vertical bar */
   --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 body {
   margin: 0;
+  font-family: 'Times New Roman', Times, serif; /* Using serif to closer match the formal presentation feel, or a clean sans */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background: radial-gradient(circle at center, var(--bg-start) 0%, var(--bg-end) 100%);
+  background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  background-attachment: fixed;
   color: var(--text-main);
   min-height: 100vh;
   display: flex;
@@ -33,21 +38,45 @@ body {
 
 #root {
   width: 100%;
-  max-width: 900px;
+  max-width: 1200px; /* Increased for sidebar */
+  margin: 0 auto;
+}
+
+.app-container {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.sidebar {
+  width: 300px;
+  flex-shrink: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
+  font-family: 'Times New Roman', Times, serif; /* Match the serif headings from the slide */
+  color: var(--text-heading);
 }
 
 /* Card */
 .card {
   background: var(--neutral-bg);
-  border-radius: 16px;
-  padding: 2.5rem;
-  box-shadow: var(--shadow-md);
+  border-radius: 20px; /* Softer, larger radius */
+  padding: 3rem 2.5rem;
+  box-shadow: var(--shadow-lg);
   text-align: center;
   width: 100%;
+  border-top: 6px solid var(--accent-color); /* Add a top border accent */
 }
 
 /* Buttons */
@@ -192,6 +221,58 @@ h1, h2, h3, h4, h5, h6 {
 }
 .gap-4 {
   gap: 1rem;
+}
+
+/* Scoreboard Items */
+.scoreboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: var(--neutral-hover);
+  border-radius: 12px;
+  border: 2px solid var(--neutral-border);
+  transition: all 0.2s ease;
+}
+
+.scoreboard-item.awardable {
+  cursor: pointer;
+  border-color: #fcd34d;
+  background-color: #fef3c7;
+  box-shadow: 0 4px 6px -1px rgba(251, 191, 36, 0.3);
+  animation: pulse 2s infinite;
+}
+
+.scoreboard-item.awardable:hover {
+  transform: translateY(-2px);
+  background-color: #fde68a;
+}
+
+.scoreboard-user {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--text-main);
+}
+
+.scoreboard-score {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
+}
+
+@media (max-width: 900px) {
+  .app-container.with-sidebar {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+  }
 }
 
 /* Edit Screen Inputs */
