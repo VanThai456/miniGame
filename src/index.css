@@ -1,0 +1,228 @@
+:root {
+  --primary-color: #2e3034;
+  --bg-start: #e0f7fa; /* Light mint */
+  --bg-end: #ffffff;
+  --correct-bg: #d4edda;
+  --correct-border: #28a745;
+  --correct-text: #155724;
+  --incorrect-bg: #f8d7da;
+  --incorrect-border: #dc3545;
+  --incorrect-text: #721c24;
+  --neutral-bg: #ffffff;
+  --neutral-border: #dee2e6;
+  --neutral-hover: #f1f3f5;
+  --text-main: #333333;
+  --text-muted: #6c757d;
+  --btn-bg: #4caf50;
+  --btn-hover: #45a049;
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: radial-gradient(circle at center, var(--bg-start) 0%, var(--bg-end) 100%);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+#root {
+  width: 100%;
+  max-width: 900px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+/* Card */
+.card {
+  background: var(--neutral-bg);
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  width: 100%;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--btn-bg);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:hover {
+  background-color: var(--btn-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background-color: var(--text-muted);
+}
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Options */
+.option-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: var(--neutral-bg);
+  border: 2px solid var(--neutral-border);
+  color: var(--text-main);
+  padding: 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.option-btn:hover:not(:disabled) {
+  background-color: var(--neutral-hover);
+  border-color: #ced4da;
+}
+
+.option-btn.correct {
+  background-color: var(--correct-bg);
+  border-color: var(--correct-border);
+  color: var(--correct-text);
+}
+
+.option-btn.incorrect {
+  background-color: var(--incorrect-bg);
+  border-color: var(--incorrect-border);
+  color: var(--incorrect-text);
+}
+
+/* Progress Bar */
+.progress-container {
+  width: 100%;
+  background-color: var(--neutral-border);
+  height: 8px;
+  border-radius: 4px;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--btn-bg);
+  transition: width 0.3s ease;
+}
+
+/* Review Item */
+.review-item {
+  background-color: var(--neutral-hover);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.review-item h4 {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.review-option {
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.review-option.correct {
+  background-color: var(--correct-bg);
+  color: var(--correct-text);
+  border: 1px solid var(--correct-border);
+}
+
+.review-option.incorrect {
+  background-color: var(--incorrect-bg);
+  color: var(--incorrect-text);
+  border: 1px solid var(--incorrect-border);
+}
+
+/* Utilities */
+.text-center {
+  text-align: center;
+}
+.mt-4 {
+  margin-top: 1rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+.mt-8 {
+  margin-top: 2rem;
+}
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gap-4 {
+  gap: 1rem;
+}
+
+/* Edit Screen Inputs */
+.edit-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+  font-family: inherit;
+  border: 2px solid var(--neutral-border);
+  border-radius: 8px;
+  background-color: var(--neutral-bg);
+  color: var(--text-main);
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: var(--btn-bg);
+}
+
+textarea.edit-input {
+  resize: vertical;
+  min-height: 80px;
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 1.5rem;
+  }
+  .btn {
+    width: 100%;
+  }
+}
